@@ -17,6 +17,10 @@ $.widget('ui.combobox', {
 	init: function() {
 		var options = this.options,
 			inputElem = $('<input />')
+
+		if(this.element[0].tagName.toLowerCase() == 'select') {
+			fillDataFromSelect(options, this.element);
+		}
 			
 		this.arrowElem = $(this.options.arrowHTML.call(this))
 			.click(boundCallback(this, 'showList')); 
@@ -68,18 +72,43 @@ $.extend($.ui.combobox, {
 				+ this.options.arrowUrl + '" width = "18" height = "22" />')
 		},
 		listContainerTag: 'span',
-		listHTML: function(data, i) {
-			var cls = i % 2 ? 'odd' : 'even';
-			return '<span class = "combobox ' + cls + '">' + data + '</span>';
-		}
+		listHTML: defaultListHTML
 	}
 });
+
+function defaultListHTML(data, i) {
+	var cls = i % 2 ? 'odd' : 'even';
+	return '<span class = "combobox ' + cls + '">' + data + '</span>';
+};
 
 function boundCallback(that, methodName) {
 	var extraArgs = [].slice.call(arguments, 2);
 	return function() {
 		that[methodName].apply(that, extraArgs.concat(arguments));
 	};
+};
+
+function fillDataFromSelect(options, element) {
+	var optionMap = {},
+		computedData = [];
+	element.children().each(function(i) {
+		if(this.tagName.toLowerCase() == 'option') {
+			var text = $(this).text(),
+				val = this.getAttribute('value') || text;
+			optionMap[val] = text;
+			computedData.push(val);
+		}
+	});
+
+	if(!options.data.length) {
+		options.data = computedData;
+	}
+
+	if(options.listHTML == defaultListHTML) {
+		options.listHTML = function(data, i) {
+			return defaultListHTML(optionMap[data]);
+		};
+	}
 };
 
 })(jQuery);
