@@ -24,7 +24,7 @@ $.widget('ui.combobox', {
 			.after(this.arrowElem)
 			.after(inputElem)
 			.remove();
-//		this.listElem = this.buildList().insertAfter(this.arrowElem).hide();
+		this.listElem = this.buildList().insertAfter(this.arrowElem).hide();
 		this.element = inputElem;
 	},
 
@@ -36,7 +36,13 @@ $.widget('ui.combobox', {
 	},
 
 	showList: function() {
-		this.listElem.toggle();
+		var styles = this.element.offset();
+		// TODO: account for borders/margins
+		styles.top += this.element.height();
+		styles.width = this.element.width();
+		styles.position = 'absolute';
+
+		this.listElem.css(styles).toggle();
 	}
 
 });
