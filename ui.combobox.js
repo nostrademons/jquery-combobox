@@ -29,10 +29,17 @@ $.widget('ui.combobox', {
 	},
 
 	buildList: function() {
-		var tag = this.options.listContainerTag;
-		return $('<' + tag + ' class = "comboboxList">' + 
-			$.map(this.options.data, this.options.listHTML).join('') +
-			'</' + tag + '>');
+		var that = this,
+			options = this.options,
+			tag = options.listContainerTag,
+			elem = $('<' + tag + ' class = "comboboxList">' + '</' + tag + '>');
+
+		$.each(options.data, function(i, val) {
+			$(options.listHTML(val, i))
+				.appendTo(elem)
+				.click(boundCallback(that, 'selectIndex', i))
+		});
+		return elem;
 	},
 
 	showList: function() {
@@ -43,6 +50,11 @@ $.widget('ui.combobox', {
 		styles.position = 'absolute';
 
 		this.listElem.css(styles).toggle();
+	},
+
+	selectIndex: function(index, e) {
+		this.element.val(this.options.data[index]);
+		this.listElem.hide();
 	}
 
 });
@@ -64,8 +76,9 @@ $.extend($.ui.combobox, {
 });
 
 function boundCallback(that, methodName) {
+	var extraArgs = [].slice.call(arguments, 2);
 	return function() {
-		that[methodName].apply(that, arguments);
+		that[methodName].apply(that, extraArgs.concat(arguments));
 	};
 };
 
