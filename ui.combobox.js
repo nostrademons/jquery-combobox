@@ -12,6 +12,12 @@
  */
 ;(function($) {
 	
+var KEY_UP = 38,
+	KEY_DOWN = 40,
+	KEY_ENTER = 13,
+	KEY_ESC = 27,
+	KEY_F4 = 115;
+	
 $.widget('ui.combobox', {
 
 	init: function() {
@@ -68,11 +74,19 @@ $.widget('ui.combobox', {
 		styles.width = this.element.width();
 		styles.position = 'absolute';
 
+		$(document).keyup(boundCallback(this, 'keyHandler'));
 		this.listElem.css(styles).show();
 	},
 
 	hideList: function() {
 		this.listElem.hide();
+	},
+
+	keyHandler: function(e) {
+		switch(e.which) {
+			case KEY_ESC:
+				this.hideList(); break;
+		};
 	},
 
 	selectIndex: function(index, e) {
@@ -104,7 +118,7 @@ function defaultListHTML(data, i) {
 function boundCallback(that, methodName) {
 	var extraArgs = [].slice.call(arguments, 2);
 	return function() {
-		that[methodName].apply(that, extraArgs.concat(arguments));
+		that[methodName].apply(that, extraArgs.concat([].slice.call(arguments)));
 	};
 };
 
