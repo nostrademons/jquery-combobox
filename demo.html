@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!-- vim: set noexpandtab : -->
+<html lang="en">
+<head>
+	<title>ComboBox demos</title>
+	<script src = "jquery-1.2.6.js"></script>
+	<script src = "ui.core.js"></script>
+	<script src = "ui.combobox.js"></script>
+	<link rel = "stylesheet" type = "text/css" href = "ui.combobox.css" />
+</head>
+<body>
+	<h1>ComboBox demos</h1>
+	<h2>Simple combobox from array</h2>
+	<p>
+	<input id = "demo1" />
+	</p>
+	<script>
+		$('#demo1').combobox({
+			data: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Kiwis', 'Grapes']
+		});
+	</script>
+	<h2>Simple combobox from select</h2>
+	<select id = "demo2">
+		<option value = "orange">Oranges</option>
+		<option value = "apple">Apples</option>
+		<option value = "pear">Pears</option>
+		<option value = "kiwi">Kiwis</option>
+		<option value = "banana">Bananas</option>
+		<option value = "grape">Grapes</option>
+	</select>
+	<script>
+		$('#demo2').combobox();
+	</script>
+</body>
+</html>

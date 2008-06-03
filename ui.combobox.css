@@ -1,0 +1,6 @@
+// vim: noexpandtab
+img.comboboxArrow {
+	position: relative;
+	vertical-align: text-bottom;
+	top: 2px;
+}
