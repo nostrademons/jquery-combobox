@@ -15,3 +15,7 @@ img.comboboxArrow {
 	font-size: 80%;
 	background-color: white;
 }
+
+.combobox:hover {
+	background-color: #eeeeff;
+}
