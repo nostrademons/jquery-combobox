@@ -1,21 +1,21 @@
 /* vim: noexpandtab : */
-img.comboboxArrow {
+img.ui-combobox-arrow {
 	position: relative;
 	vertical-align: text-bottom;
 	top: 2px;
 }
 
-.comboboxList {
+.ui-combobox-list {
 	border: 1px solid black;
 }
 
-.comboboxList, .combobox {
+.ui-combobox-list, .ui-combobox-item {
 	display: block;
 	font-family: sans-serif;
 	font-size: 80%;
 	background-color: white;
 }
 
-.combobox:hover {
+.ui-combobox-item:hover {
 	background-color: #eeeeff;
 }

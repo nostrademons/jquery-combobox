@@ -15,7 +15,8 @@
 $.widget('ui.combobox', {
 
 	init: function() {
-		var options = this.options,
+		var that = this,
+			options = this.options,
 			inputElem = $('<input />')
 
 		if(this.element[0].tagName.toLowerCase() == 'select') {
@@ -23,7 +24,13 @@ $.widget('ui.combobox', {
 		}
 			
 		this.arrowElem = $(this.options.arrowHTML.call(this))
-			.click(boundCallback(this, 'showList')); 
+			.click(function(e) {
+				if(that.listElem.is(':visible')) {
+					that.hideList();
+				} else {
+					that.showList();
+				}
+			}); 
 		this.oldElem = this.element
 			.after(this.arrowElem)
 			.after(inputElem)
@@ -36,7 +43,7 @@ $.widget('ui.combobox', {
 		var that = this,
 			options = this.options,
 			tag = options.listContainerTag,
-			elem = $('<' + tag + ' class = "comboboxList">' + '</' + tag + '>');
+			elem = $('<' + tag + ' class = "ui-combobox-list">' + '</' + tag + '>');
 
 		$.each(options.data, function(i, val) {
 			$(options.listHTML(val, i))
@@ -53,12 +60,16 @@ $.widget('ui.combobox', {
 		styles.width = this.element.width();
 		styles.position = 'absolute';
 
-		this.listElem.css(styles).toggle();
+		this.listElem.css(styles).show();
+	},
+
+	hideList: function() {
+		this.listElem.hide();
 	},
 
 	selectIndex: function(index, e) {
 		this.element.val(this.options.data[index]);
-		this.listElem.hide();
+		this.hideList();
 	}
 
 });
@@ -66,9 +77,10 @@ $.widget('ui.combobox', {
 $.extend($.ui.combobox, {
 	defaults: {
 		data: [],
+		autoShow: true,
 		arrowUrl: 'drop_down.png',
 		arrowHTML: function() {
-			return $('<img class = "comboboxArrow" src = "' 
+			return $('<img class = "ui-combobox-arrow" src = "' 
 				+ this.options.arrowUrl + '" width = "18" height = "22" />')
 		},
 		listContainerTag: 'span',
@@ -78,7 +90,7 @@ $.extend($.ui.combobox, {
 
 function defaultListHTML(data, i) {
 	var cls = i % 2 ? 'odd' : 'even';
-	return '<span class = "combobox ' + cls + '">' + data + '</span>';
+	return '<span class = "ui-combobox-item ' + cls + '">' + data + '</span>';
 };
 
 function boundCallback(that, methodName) {
