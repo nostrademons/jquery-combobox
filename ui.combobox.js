@@ -31,12 +31,20 @@ $.widget('ui.combobox', {
 					that.showList();
 				}
 			}); 
+
 		this.oldElem = this.element
 			.after(this.arrowElem)
 			.after(inputElem)
 			.remove();
+
 		this.listElem = this.buildList().insertAfter(this.arrowElem).hide();
+
 		this.element = inputElem;
+		if(options.autoShow) {
+			this.element
+				.focus(boundCallback(this, 'showList'))
+				.blur(boundCallback(this, 'hideList'));
+		}
 	},
 
 	buildList: function() {
