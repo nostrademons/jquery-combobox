@@ -96,9 +96,16 @@ $.widget('ui.combobox', {
 	},
 
 	keyHandler: function(e) {
+		var optionLength = this.options.data.length;
 		switch(e.which) {
 			case KEY_ESC:
 				this.hideList(); break;
+			case KEY_UP:
+				this.changeSelection((this.selectedIndex - 1) % optionLength);
+				break;
+			case KEY_DOWN:
+				this.changeSelection((this.selectedIndex + 1) % optionLength);
+				break;
 		};
 	},
 
