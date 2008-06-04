@@ -63,6 +63,7 @@ $.widget('ui.combobox', {
 			$(options.listHTML(val, i))
 				.appendTo(elem)
 				.click(boundCallback(that, 'selectIndex', i))
+				.mouseover(boundCallback(that, 'changeSelection', i));
 		});
 		return elem;
 	},
@@ -76,6 +77,7 @@ $.widget('ui.combobox', {
 
 		$(document).keyup(boundCallback(this, 'keyHandler'));
 		this.listElem.css(styles).show();
+		this.changeSelection(this.findSelection());
 	},
 
 	hideList: function() {
@@ -89,6 +91,33 @@ $.widget('ui.combobox', {
 		};
 	},
 
+	findSelection: function() {
+		var data = this.options.data,
+			typed = this.element.val().toLowerCase();
+
+		function checkForMatch(allowMiddle) {
+			for(var i = 0, len = data.length; i < len; ++i) {
+				var index = data[i].toLowerCase().indexOf(typed);
+				if(index == 0 || (allowMiddle && index != -1)) {
+					return i;
+				}
+			};
+		};
+
+		checkForMatch(false);
+		if(this.options.matchMiddle) {
+			checkForMatch(true);
+		}
+
+		return 0;
+	},
+
+	changeSelection: function(index) {
+		this.selectedIndex = index;
+		this.listElem.children('.selected').removeClass('selected');
+		this.listElem.children(':eq(' + index + ')').addClass('selected');
+	},
+
 	selectIndex: function(index, e) {
 		this.element.val(this.options.data[index]);
 		this.hideList();
@@ -100,6 +129,7 @@ $.extend($.ui.combobox, {
 	defaults: {
 		data: [],
 		autoShow: true,
+		matchMiddle: true,
 		arrowUrl: 'drop_down.png',
 		arrowHTML: function() {
 			return $('<img class = "ui-combobox-arrow" src = "' 

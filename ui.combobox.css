@@ -16,6 +16,9 @@ img.ui-combobox-arrow {
 	background-color: white;
 }
 
-.ui-combobox-item:hover {
+.ui-combobox-list .selected {
 	background-color: #eeeeff;
+	border-top: 1px solid blue;
+	border-bottom: 1px solid blue;
+	font-weight: bold;
 }
