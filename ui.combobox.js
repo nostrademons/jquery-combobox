@@ -45,7 +45,12 @@ $.widget('ui.combobox', {
 
 		this.listElem = this.buildList().insertAfter(this.arrowElem).hide();
 
-		this.element = inputElem;
+		this.element = inputElem
+			.keyup(function(e) {
+				if(e.which == KEY_F4) { 
+					that.showList();
+				}
+			});
 		if(options.autoShow) {
 			this.element
 				.focus(boundCallback(this, 'showList'))
@@ -62,7 +67,7 @@ $.widget('ui.combobox', {
 		$.each(options.data, function(i, val) {
 			$(options.listHTML(val, i))
 				.appendTo(elem)
-				.click(boundCallback(that, 'selectIndex', i))
+				.click(boundCallback(that, 'finishSelection', i))
 				.mouseover(boundCallback(that, 'changeSelection', i));
 		});
 		return elem;
@@ -94,12 +99,16 @@ $.widget('ui.combobox', {
 		var optionLength = this.options.data.length;
 		switch(e.which) {
 			case KEY_ESC:
-				this.hideList(); break;
+				this.hideList(); 
+				break;
 			case KEY_UP:
 				this.changeSelection((this.selectedIndex - 1) % optionLength);
 				break;
 			case KEY_DOWN:
 				this.changeSelection((this.selectedIndex + 1) % optionLength);
+				break;
+			case KEY_ENTER:
+				this.finishSelection(this.selectedIndex, e);
 				break;
 			default:
 				this.changeSelection(this.findSelection());
@@ -136,7 +145,7 @@ $.widget('ui.combobox', {
 		this.listElem.children(':eq(' + index + ')').addClass('selected');
 	},
 
-	selectIndex: function(index, e) {
+	finishSelection: function(index, e) {
 		this.element.val(this.options.data[index]);
 		this.hideList();
 	}
