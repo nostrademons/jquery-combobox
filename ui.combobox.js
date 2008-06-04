@@ -31,7 +31,7 @@ $.widget('ui.combobox', {
 			
 		this.arrowElem = $(this.options.arrowHTML.call(this))
 			.click(function(e) {
-				if(that.listElem.is(':visible')) {
+				if(that.isListVisible()) {
 					that.hideList();
 				} else {
 					that.showList();
@@ -45,7 +45,12 @@ $.widget('ui.combobox', {
 
 		this.listElem = this.buildList().insertAfter(this.arrowElem).hide();
 
-		this.element = inputElem;
+		this.element = inputElem
+			.keyup(function() {
+				if(that.isListVisible()) {
+					that.changeSelection(that.findSelection());
+				}
+			});
 		if(options.autoShow) {
 			this.element
 				.focus(boundCallback(this, 'showList'))
@@ -68,6 +73,10 @@ $.widget('ui.combobox', {
 		return elem;
 	},
 
+	isListVisible: function() {
+		return this.listElem.is(':visible');
+	},
+
 	showList: function() {
 		var styles = this.element.offset();
 		// TODO: account for borders/margins
@@ -75,13 +84,15 @@ $.widget('ui.combobox', {
 		styles.width = this.element.width();
 		styles.position = 'absolute';
 
-		$(document).keyup(boundCallback(this, 'keyHandler'));
+		this.boundKeyHandler = boundCallback(this, 'keyHandler');
+		$(document).keyup(this.boundKeyHandler);
 		this.listElem.css(styles).show();
 		this.changeSelection(this.findSelection());
 	},
 
 	hideList: function() {
 		this.listElem.hide();
+		$(document).unbind('keyup', this.boundKeyHandler);
 	},
 
 	keyHandler: function(e) {
@@ -95,18 +106,20 @@ $.widget('ui.combobox', {
 		var data = this.options.data,
 			typed = this.element.val().toLowerCase();
 
-		function checkForMatch(allowMiddle) {
+		for(var i = 0, len = data.length; i < len; ++i) {
+			var index = data[i].toLowerCase().indexOf(typed);
+			if(index == 0) {
+				return i;
+			}
+		};
+
+		if(this.options.matchMiddle) {
 			for(var i = 0, len = data.length; i < len; ++i) {
 				var index = data[i].toLowerCase().indexOf(typed);
-				if(index == 0 || (allowMiddle && index != -1)) {
+				if(index != -1) {
 					return i;
 				}
 			};
-		};
-
-		checkForMatch(false);
-		if(this.options.matchMiddle) {
-			checkForMatch(true);
 		}
 
 		return 0;
