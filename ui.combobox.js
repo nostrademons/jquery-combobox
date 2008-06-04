@@ -24,6 +24,10 @@ $.widget('ui.combobox', {
 		var that = this,
 			options = this.options,
 			inputElem = $('<input />')
+				.attr('id', this.element.attr('id'))
+				.attr('class', this.element.attr('class'))
+				.attr('name', this.element.attr('name'))
+
 
 		if(this.element[0].tagName.toLowerCase() == 'select') {
 			fillDataFromSelect(options, this.element);
