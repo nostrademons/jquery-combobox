@@ -24,6 +24,7 @@
 	</script>
 
 	<h2>Simple combobox from select</h2>
+	<div id = "demo2Menu">Menu selection shows up here</div>
 	<select id = "demo2">
 		<option value = "orange">Oranges</option>
 		<option value = "apple">Apples</option>
@@ -33,21 +34,40 @@
 		<option value = "grape">Grapes</option>
 	</select>
 	<script>
-		$('#demo2').combobox();
+		$('#demo2').combobox()
+			.bind('comboboxchange', function(e, ui) {
+				$('#demo2Menu').text(ui.value);
+			});
 	</script>
 
 	<h2>Event Handling</h2>
 	<div id = "demo3Text">Text shows up here</div>
+	<div id = "demo3Menu">Menu selection shows up here</div>
 	<div id = "demo3">This is alt text, where the combobox would be</div>
 	<script>
 		$('#demo3').combobox({
 			data: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Kiwis', 'Grapes'],
 			matchMiddle: false,
-			change: function(e, ui) {
+			key: function(e, ui) {
 				$('#demo3Text').html(ui.value);
+			},
+			change: function(e, ui) {
+				$('#demo3Menu').html(ui.value);
 			}
 		}).bind('comboboxselect', function(e, ui) {
 			alert((ui.isCustom ? 'Custom' : 'Element ' + ui.index) + ': ' + ui.value);
+		});
+	</script>
+	<h2>Enable/Disable/Destroy</h2>
+	<p id = "demo4">This is alt text, where the combobox would be</p>
+	<p>
+		<a href = "" onclick = "$('#demo4').combobox('enable'); return false">Enable</a> |
+		<a href = "" onclick = "$('#demo4').combobox('disable'); return false">Disable</a> |
+		<a href = "" onclick = "$('#demo4').combobox('destroy'); return false">Destroy</a>
+	</p>
+	<script>
+		$('#demo4').combobox({
+			data: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Kiwis', 'Grapes']
 		});
 	</script>
 

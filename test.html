@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!-- vim: set noexpandtab : -->
+<html lang="en">
+<head>
+	<title>ComboBox Test Suite</title>
+	<link rel="stylesheet" href="qunit/testsuite.css" type="text/css" media="screen">
+	<link rel = "stylesheet" type = "text/css" href = "ui.combobox.css" />
+	<script src = "jquery-1.2.6.js"></script>
+	<script src = "ui.core.js"></script>
+	<script src = "ui.combobox.js"></script>
+	<script src="qunit/testrunner.js"></script>
+	<script src="test.js"></script>
+</head>
+<body>
+	<h1>ComboBox Test Suite</h1>
+	<h2 id="banner"></h2>
+	<h2 id="userAgent"></h2>
+
+	<ol id="tests"></ol>
+
+<div id="main" style="position:absolute;top:-2000000px;">
+	<h2>Simple combobox from array</h2>
+	<p>
+	<label for = "demo1">First demo: </label>
+	<input name = "field1" id = "demo1" class = "inputField" />
+	</p>
+	<p><a href = "" onclick = "alert($('#demo1').val()); return false;">Show val</a></p>
+	<script>
+		$('#demo1').combobox({
+			data: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Kiwis', 'Grapes'],
+			autoShow: false
+		});
+	</script>
+
+	<h2>Simple combobox from select</h2>
+	<select id = "demo2">
+		<option value = "orange">Oranges</option>
+		<option value = "apple">Apples</option>
+		<option value = "pear">Pears</option>
+		<option value = "kiwi">Kiwis</option>
+		<option value = "banana">Bananas</option>
+		<option value = "grape">Grapes</option>
+	</select>
+	<script>
+		$('#demo2').combobox();
+	</script>
+
+</div>
+</body>
+</html>

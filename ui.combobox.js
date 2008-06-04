@@ -17,13 +17,13 @@ var KEY_UP = 38,
 	KEY_ENTER = 13,
 	KEY_ESC = 27,
 	KEY_F4 = 115;
-	
+
 $.widget('ui.combobox', {
 
 	init: function() {
-		var that = this,
-			options = this.options,
-			inputElem = $('<input />');
+		var that = this;
+		var options = this.options;
+		var inputElem = $('<input />');
 
 		function maybeCopyAttr(name) {
 			var val = that.element.attr(name);
@@ -49,6 +49,9 @@ $.widget('ui.combobox', {
 			}); 
 
 		this.oldElem = this.element
+			.unbind('getData.combobox')
+			.unbind('setData.combobox')
+			.unbind('remove')
 			.after(this.arrowElem)
 			.after(inputElem)
 			.remove();
@@ -58,7 +61,7 @@ $.widget('ui.combobox', {
 		this.element = inputElem
 			.keyup(function(e) {
 				if(e.which == KEY_F4) { 
-					that.showList();
+					that.showList(e);
 				}
 			})
 			.change(boundCallback(this, 'fireEvent', 'select'));
@@ -69,11 +72,30 @@ $.widget('ui.combobox', {
 		}
 	},
 
+	cleanup: function() {
+		// Cleanup and destroy are split into two separate handlers because
+		// one of them (cleanup, in this case) needs to be bound to the
+		// 'remove' event handler to clean up the extra elements.  The
+		// destroy handler removes the custom input element added by this
+		// plugin, and so we get an infinite loop if they aren't split.
+		if(this.boundKeyHandler) {
+			$(document).unbind('keyup', this.boundKeyHandler);
+		}
+		this.arrowElem.remove();
+		this.listElem.remove();
+	},
+
+	destroy: function() {
+		var newElem = this.element;
+		this.element = this.oldElem.insertBefore(this.arrowElem);
+		newElem.remove();	// Triggers cleanup
+	},
+
 	buildList: function() {
-		var that = this,
-			options = this.options,
-			tag = options.listContainerTag,
-			elem = $('<' + tag + ' class = "ui-combobox-list">' + '</' + tag + '>');
+		var that = this;
+		var options = this.options;
+		var tag = options.listContainerTag;
+		var elem = $('<' + tag + ' class = "ui-combobox-list">' + '</' + tag + '>');
 
 		$.each(options.data, function(i, val) {
 			$(options.listHTML(val, i))
@@ -88,7 +110,11 @@ $.widget('ui.combobox', {
 		return this.listElem.is(':visible');
 	},
 
-	showList: function() {
+	showList: function(e) {
+		if(this.options.disabled) {
+			return;
+		}
+
 		var styles = this.element.offset();
 		// TODO: account for borders/margins
 		styles.top += this.element.height();
@@ -98,7 +124,7 @@ $.widget('ui.combobox', {
 		this.boundKeyHandler = boundCallback(this, 'keyHandler');
 		$(document).keyup(this.boundKeyHandler);
 		this.listElem.css(styles).show();
-		this.changeSelection(this.findSelection());
+		this.changeSelection(this.findSelection(), e);
 	},
 
 	hideList: function() {
@@ -107,30 +133,34 @@ $.widget('ui.combobox', {
 	},
 
 	keyHandler: function(e) {
+		if(this.options.disabled) {
+			return;
+		}
+
 		var optionLength = this.options.data.length;
 		switch(e.which) {
 			case KEY_ESC:
 				this.hideList(); 
 				break;
 			case KEY_UP:
-				this.changeSelection((this.selectedIndex - 1) % optionLength);
+				this.changeSelection((this.selectedIndex - 1) % optionLength, e);
 				break;
 			case KEY_DOWN:
-				this.changeSelection((this.selectedIndex + 1) % optionLength);
+				this.changeSelection((this.selectedIndex + 1) % optionLength, e);
 				break;
 			case KEY_ENTER:
 				this.finishSelection(this.selectedIndex, e);
 				break;
 			default:
+				this.fireEvent('key', e);
 				this.changeSelection(this.findSelection());
 				break;
 		}
-		this.fireEvent('change', e);
 	},
 
-	prepareCallbackObj: function() {
-		var val = this.element.val(),
-			index = $.inArray(val, this.options.data);
+	prepareCallbackObj: function(val) {
+		val = val || this.element.val();
+		var index = $.inArray(val, this.options.data);
 		return {
 			value: val,
 			index: index,
@@ -140,16 +170,16 @@ $.widget('ui.combobox', {
 		};
 	},
 
-	fireEvent: function(eventName, e) {
+	fireEvent: function(eventName, e, val) {
 		this.element.triggerHandler('combobox' + eventName, [
 			e,
-			this.prepareCallbackObj()
+			this.prepareCallbackObj(val)
 		], this.options[eventName]);
 	},
 
 	findSelection: function() {
-		var data = this.options.data,
-			typed = this.element.val().toLowerCase();
+		var data = this.options.data;
+		var typed = this.element.val().toLowerCase();
 
 		for(var i = 0, len = data.length; i < len; ++i) {
 			var index = data[i].toLowerCase().indexOf(typed);
@@ -170,10 +200,13 @@ $.widget('ui.combobox', {
 		return 0;
 	},
 
-	changeSelection: function(index) {
+	changeSelection: function(index, e) {
 		this.selectedIndex = index;
 		this.listElem.children('.selected').removeClass('selected');
 		this.listElem.children(':eq(' + index + ')').addClass('selected');
+		if(e) {
+			this.fireEvent('change', e, this.options.data[index]);
+		}
 	},
 
 	finishSelection: function(index, e) {
@@ -191,6 +224,7 @@ $.extend($.ui.combobox, {
 		matchMiddle: true,
 		change: function(e, ui) {},
 		select: function(e, ui) {},
+		key: function(e, ui) {},
 		arrowUrl: 'drop_down.png',
 		arrowHTML: function() {
 			return $('<img class = "ui-combobox-arrow" src = "' 
@@ -212,16 +246,19 @@ $.fn.combobox = function() {
 		return results;
 	}
 
-	var needsHack = false,
-		newResults = $($.map(results, function(dom) {
-			var instance = $.data(dom, 'combobox');
-			if(instance && instance.element[0] != dom) {
-				needsHack = true;
-				return instance.element[0];
-			} else {
-				return dom;
-			}
-		}));
+	var needsHack = false;
+	var newResults = $($.map(results, function(dom) {
+		var instance = $.data(dom, 'combobox');
+		if(instance && instance.element[0] != dom) {
+			needsHack = true;
+			var newDOM = instance.element[0];
+			$.data(newDOM, 'combobox', instance);
+			return newDOM;
+		} else {
+			return dom;
+		}
+	}));
+
 	return !needsHack ? results : newResults
 		.bind('setData.' + name, function(e, key, value) {
 			return $.data(this, 'combobox').setData(key, value);
@@ -230,7 +267,7 @@ $.fn.combobox = function() {
 			return $.data(this, 'combobox').getData(key);
 		})
 		.bind('remove', function() {
-			return $.data(this, 'combobox').destroy();
+			return $.data(this, 'combobox').cleanup();
 		});
 };
 
@@ -247,8 +284,7 @@ function boundCallback(that, methodName) {
 };
 
 function fillDataFromSelect(options, element) {
-	var optionMap = {},
-		computedData = [];
+	var optionMap = {}, computedData = [];
 	element.children().each(function(i) {
 		if(this.tagName.toLowerCase() == 'option') {
 			var text = $(this).text(),
