@@ -12,7 +12,8 @@
 	<h1>ComboBox demos</h1>
 	<h2>Simple combobox from array</h2>
 	<p>
-	<label for = "demo1">First demo: </label><input id = "demo1" />
+	<label for = "demo1">First demo: </label>
+	<input name = "field1" id = "demo1" class = "inputField" />
 	</p>
 	<p><a href = "" onclick = "alert($('#demo1').val()); return false;">Show val</a></p>
 	<script>
@@ -21,6 +22,7 @@
 			autoShow: false
 		});
 	</script>
+
 	<h2>Simple combobox from select</h2>
 	<select id = "demo2">
 		<option value = "orange">Oranges</option>
@@ -33,5 +35,21 @@
 	<script>
 		$('#demo2').combobox();
 	</script>
+
+	<h2>Event Handling</h2>
+	<div id = "demo3Text">Text shows up here</div>
+	<div id = "demo3">This is alt text, where the combobox would be</div>
+	<script>
+		$('#demo3').combobox({
+			data: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Kiwis', 'Grapes'],
+			matchMiddle: false,
+			change: function(e, ui) {
+				$('#demo3Text').html(ui.value);
+			}
+		}).bind('comboboxselect', function(e, ui) {
+			alert((ui.isCustom ? 'Custom' : 'Element ' + ui.index) + ': ' + ui.value);
+		});
+	</script>
+
 </body>
 </html>

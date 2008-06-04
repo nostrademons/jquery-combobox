@@ -23,11 +23,17 @@ $.widget('ui.combobox', {
 	init: function() {
 		var that = this,
 			options = this.options,
-			inputElem = $('<input />')
-				.attr('id', this.element.attr('id'))
-				.attr('class', this.element.attr('class'))
-				.attr('name', this.element.attr('name'))
+			inputElem = $('<input />');
 
+		function maybeCopyAttr(name) {
+			var val = that.element.attr(name);
+			if(val) {
+				inputElem.attr(name, val);
+			}
+		};
+		maybeCopyAttr('id');
+		maybeCopyAttr('class');
+		maybeCopyAttr('name');
 
 		if(this.element[0].tagName.toLowerCase() == 'select') {
 			fillDataFromSelect(options, this.element);
@@ -54,7 +60,8 @@ $.widget('ui.combobox', {
 				if(e.which == KEY_F4) { 
 					that.showList();
 				}
-			});
+			})
+			.change(boundCallback(this, 'fireEvent', 'select'));
 		if(options.autoShow) {
 			this.element
 				.focus(boundCallback(this, 'showList'))
@@ -118,6 +125,26 @@ $.widget('ui.combobox', {
 				this.changeSelection(this.findSelection());
 				break;
 		}
+		this.fireEvent('change', e);
+	},
+
+	prepareCallbackObj: function() {
+		var val = this.element.val(),
+			index = $.inArray(val, this.options.data);
+		return {
+			value: val,
+			index: index,
+			isCustom: index == -1,
+			inputElement: this.element,
+			listElement: this.listElement
+		};
+	},
+
+	fireEvent: function(eventName, e) {
+		this.element.triggerHandler('combobox' + eventName, [
+			e,
+			this.prepareCallbackObj()
+		], this.options[eventName]);
 	},
 
 	findSelection: function() {
@@ -152,6 +179,7 @@ $.widget('ui.combobox', {
 	finishSelection: function(index, e) {
 		this.element.val(this.options.data[index]);
 		this.hideList();
+		this.fireEvent('select', e);
 	}
 
 });
@@ -161,6 +189,8 @@ $.extend($.ui.combobox, {
 		data: [],
 		autoShow: true,
 		matchMiddle: true,
+		change: function(e, ui) {},
+		select: function(e, ui) {},
 		arrowUrl: 'drop_down.png',
 		arrowHTML: function() {
 			return $('<img class = "ui-combobox-arrow" src = "' 
@@ -170,6 +200,39 @@ $.extend($.ui.combobox, {
 		listHTML: defaultListHTML
 	}
 });
+
+// Hack for chainability - since the combobox modifies this.element but 'this'
+// is only the UI instance, it leaves the JQuery collection itself pointing
+// at stale, removed-from-DOM instances.  This hack invokes the UI-factory 
+// plugin method first, then maps each instance in the JQuery collection to 
+var oldPlugin = $.fn.combobox;
+$.fn.combobox = function() {
+	var results = oldPlugin.apply(this, arguments);
+	if(!(results instanceof $)) {
+		return results;
+	}
+
+	var needsHack = false,
+		newResults = $($.map(results, function(dom) {
+			var instance = $.data(dom, 'combobox');
+			if(instance && instance.element[0] != dom) {
+				needsHack = true;
+				return instance.element[0];
+			} else {
+				return dom;
+			}
+		}));
+	return !needsHack ? results : newResults
+		.bind('setData.' + name, function(e, key, value) {
+			return $.data(this, 'combobox').setData(key, value);
+		})
+		.bind('getData.' + name, function(e, key) {
+			return $.data(this, 'combobox').getData(key);
+		})
+		.bind('remove', function() {
+			return $.data(this, 'combobox').destroy();
+		});
+};
 
 function defaultListHTML(data, i) {
 	var cls = i % 2 ? 'odd' : 'even';
