@@ -45,12 +45,7 @@ $.widget('ui.combobox', {
 
 		this.listElem = this.buildList().insertAfter(this.arrowElem).hide();
 
-		this.element = inputElem
-			.keyup(function() {
-				if(that.isListVisible()) {
-					that.changeSelection(that.findSelection());
-				}
-			});
+		this.element = inputElem;
 		if(options.autoShow) {
 			this.element
 				.focus(boundCallback(this, 'showList'))
@@ -106,7 +101,10 @@ $.widget('ui.combobox', {
 			case KEY_DOWN:
 				this.changeSelection((this.selectedIndex + 1) % optionLength);
 				break;
-		};
+			default:
+				this.changeSelection(this.findSelection());
+				break;
+		}
 	},
 
 	findSelection: function() {
