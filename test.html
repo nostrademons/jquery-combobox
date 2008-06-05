@@ -18,19 +18,13 @@
 
 	<ol id="tests"></ol>
 
-<div id="main" style="position:absolute;top:-2000000px;">
+<div id="main">
 	<h2>Simple combobox from array</h2>
 	<p>
 	<label for = "demo1">First demo: </label>
 	<input name = "field1" id = "demo1" class = "inputField" />
 	</p>
 	<p><a href = "" onclick = "alert($('#demo1').val()); return false;">Show val</a></p>
-	<script>
-		$('#demo1').combobox({
-			data: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Kiwis', 'Grapes'],
-			autoShow: false
-		});
-	</script>
 
 	<h2>Simple combobox from select</h2>
 	<select id = "demo2">
@@ -41,10 +35,6 @@
 		<option value = "banana">Bananas</option>
 		<option value = "grape">Grapes</option>
 	</select>
-	<script>
-		$('#demo2').combobox();
-	</script>
-
 </div>
 </body>
 </html>

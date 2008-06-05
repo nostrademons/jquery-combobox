@@ -24,7 +24,6 @@
 	</script>
 
 	<h2>Simple combobox from select</h2>
-	<div id = "demo2Menu">Menu selection shows up here</div>
 	<select id = "demo2">
 		<option value = "orange">Oranges</option>
 		<option value = "apple">Apples</option>
@@ -34,10 +33,7 @@
 		<option value = "grape">Grapes</option>
 	</select>
 	<script>
-		$('#demo2').combobox()
-			.bind('comboboxchange', function(e, ui) {
-				$('#demo2Menu').text(ui.value);
-			});
+		$('#demo2').combobox();
 	</script>
 
 	<h2>Event Handling</h2>
@@ -63,13 +59,15 @@
 	<p>
 		<a href = "" onclick = "$('#demo4').combobox('enable'); return false">Enable</a> |
 		<a href = "" onclick = "$('#demo4').combobox('disable'); return false">Disable</a> |
-		<a href = "" onclick = "$('#demo4').combobox('destroy'); return false">Destroy</a>
+		<a href = "" onclick = "$('#demo4').combobox('destroy'); return false">Destroy</a> |
+		<a href = "" onclick = "$('#demo4').remove(); return false">Remove</a>
 	</p>
 	<script>
 		$('#demo4').combobox({
 			data: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Kiwis', 'Grapes']
 		});
 	</script>
+
 
 </body>
 </html>

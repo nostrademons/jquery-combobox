@@ -18,6 +18,17 @@ function fireKey(code) {
 	}]);
 };
 
+function makeDemo1() {
+	$('#demo1').combobox({
+		data: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Kiwis', 'Grapes'],
+		autoShow: false
+	});
+};
+
+function makeDemo2() {
+	$('#demo2').combobox();
+};
+
 function clickDropdown(comboID) {
 	return $('#' + comboID).siblings('img').click();
 };
@@ -31,29 +42,33 @@ function dropdownOptions(comboID) {
 };
 
 test('preserves attributes', function() {
+	makeDemo1();
 	equals($('#demo1').attr('id'), 'demo1');
 	equals($('#demo1').attr('name'), 'field1');
 	equals($('#demo1').attr('class'), 'inputField');
 });
 
 test('chainability', function() {
+	makeDemo1();
 	$('#demo1').removeClass('inputField').val('test');
 	equals($('#demo1').val(), 'test');
 	equals($('#demo1').attr('class'), '');
 });
 
 test('fill from select', function() {
+	makeDemo2();
 	var found = $('#demo2').data('combobox').options.data;
-	equals(6, data.length);
-	equals(data[0], 'orange');
-	equals(data[1], 'apple');
-	equals(data[2], 'pear');
-	equals(data[3], 'kiwi');
-	equals(data[4], 'banana');
-	equals(data[5], 'grape');
+	equals(6, found.length);
+	equals(found[0], 'orange');
+	equals(found[1], 'apple');
+	equals(found[2], 'pear');
+	equals(found[3], 'kiwi');
+	equals(found[4], 'banana');
+	equals(found[5], 'grape');
 });
 
 test('dropdown', function() {
+	makeDemo1();
 	clickDropdown('demo1');
 	var expected = $('#demo1').data('combobox').options.data,
 		found = dropdownOptions('demo1');
@@ -64,6 +79,7 @@ test('dropdown', function() {
 });
 
 test('select by click', function() {
+	makeDemo1();
 	var eventVal = null;
 	$('#demo1').bind('comboboxselect', function(e, ui) {
 		eventVal = ui;
@@ -80,6 +96,7 @@ test('select by click', function() {
 });
 
 test('select by arrow', function() {
+	makeDemo2();
 	var selectEvent = null,
 		changeEvent = null;
 	$('#demo2').bind('comboboxchange', function(e, ui) {
@@ -102,3 +119,4 @@ test('select by arrow', function() {
 	equals(selectEvent.value, 'apple');
 	ok(dropdownList('demo2').is(':hidden'), 'menu hidden');
 });
+
