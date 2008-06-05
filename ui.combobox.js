@@ -91,6 +91,20 @@ $.widget('ui.combobox', {
 		newElem.remove();	// Triggers cleanup
 	},
 
+	setData: function(key, value) {
+		this.options[key] = value;
+
+		if(key == 'disabled' && this.isListVisible()) {
+			this.hideList();
+		}
+
+		if(key == 'data' || key == 'listContainerTag' || key == 'listHTML') {
+			var isVisible = this.isListVisible();
+			this.listElem = this.buildList().replaceAll(this.listElem);
+			this[isVisible ? 'showList' : 'hideList']();
+		}
+	},
+
 	buildList: function() {
 		var that = this;
 		var options = this.options;
@@ -260,10 +274,10 @@ $.fn.combobox = function() {
 	}));
 
 	return !needsHack ? results : newResults
-		.bind('setData.' + name, function(e, key, value) {
+		.bind('setData.combobox', function(e, key, value) {
 			return $.data(this, 'combobox').setData(key, value);
 		})
-		.bind('getData.' + name, function(e, key) {
+		.bind('getData.combobox', function(e, key) {
 			return $.data(this, 'combobox').getData(key);
 		})
 		.bind('remove', function() {

@@ -18,14 +18,17 @@
 
 	<ol id="tests"></ol>
 
-<div id="main">
+<div id="main" style = "position: absolute; top: -10000px">
+<div id = "box1">
 	<h2>Simple combobox from array</h2>
 	<p>
 	<label for = "demo1">First demo: </label>
 	<input name = "field1" id = "demo1" class = "inputField" />
 	</p>
 	<p><a href = "" onclick = "alert($('#demo1').val()); return false;">Show val</a></p>
+</div>
 
+<div id = "box2">
 	<h2>Simple combobox from select</h2>
 	<select id = "demo2">
 		<option value = "orange">Oranges</option>
@@ -35,6 +38,7 @@
 		<option value = "banana">Bananas</option>
 		<option value = "grape">Grapes</option>
 	</select>
+</div>
 </div>
 </body>
 </html>

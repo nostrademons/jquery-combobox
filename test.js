@@ -19,14 +19,14 @@ function fireKey(code) {
 };
 
 function makeDemo1() {
-	$('#demo1').combobox({
+	return $('#demo1').combobox({
 		data: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Kiwis', 'Grapes'],
 		autoShow: false
 	});
 };
 
 function makeDemo2() {
-	$('#demo2').combobox();
+	return $('#demo2').combobox();
 };
 
 function clickDropdown(comboID) {
@@ -78,20 +78,85 @@ test('dropdown', function() {
 	}
 });
 
+test('replace data', function() {
+	makeDemo1();
+	clickDropdown('demo1')
+	$('#demo1').triggerHandler('setData.combobox', ['data', ['Foo', 'Bar', 'Baz']]);
+
+	var firstOption = dropdownOptions('demo1').eq(0);
+	ok(dropdownList('demo1').is(':visible'), 'list still visible');
+	ok(firstOption.is('.selected'), 'first item selected');
+	equals(firstOption.text(), 'Foo');
+});
+
+test('disable', function() {
+	function isHidden(msg) {
+		ok(dropdownList('demo2').is(':hidden'), msg);
+	};
+
+	var keyEvent = null;
+	makeDemo2().bind('comboboxkey', function(e, ui) {
+		keyEvent = ui;	
+	});
+	clickDropdown('demo2');
+	$('#demo2').combobox('disable');
+	isHidden('closes dropdown');
+
+	clickDropdown('demo2');
+	isHidden('disabled click');
+
+	$('#demo2').focus();
+	isHidden('disabled focus');
+
+	$('#demo2').val('ki').keyup();
+	isHidden('disabled typing');
+	ok(!keyEvent, 'disabled event firing');
+
+	$('#demo2').combobox('enable');
+	clickDropdown('demo2');
+	dropdownList('demo2').is(':visible');
+});
+
+test('destroy', function() {
+	makeDemo2();
+	clickDropdown('demo2');
+	$('#demo2').combobox('destroy');
+
+	ok($('#demo2').is('select'), 'original element restored');
+	equals($('#demo2').siblings('img').length, 0, 'image deleted');
+	equals(dropdownList('demo2').length, 0, 'list deleted');
+});
+
+test('remove', function() {
+	makeDemo2();
+	clickDropdown('demo2');
+	$('#demo2').remove();
+
+	equals($('#demo2').length, 0, 'element deleted');
+	equals($('#box2 img').length, 0, 'image deleted');
+	equals(dropdownList('demo2').length, 0, 'list deleted');
+});
+
 test('select by click', function() {
 	makeDemo1();
-	var eventVal = null;
+	var selectEvent = null, changeEvent = null;
 	$('#demo1').bind('comboboxselect', function(e, ui) {
-		eventVal = ui;
+		selectEvent = ui;
+	})
+	.bind('comboboxchange', function(e, ui) {
+		changeEvent = ui;	
 	});
 
 	clickDropdown('demo1');
-	dropdownOptions('demo1').eq(3).click();
+	dropdownOptions('demo1').eq(2).mouseover();
+	equals(changeEvent.value, 'Pears');
+	ok(dropdownOptions('demo1').eq(2).is('.selected'), 'mouseover selects');
 
+	dropdownOptions('demo1').eq(3).click();
 	equals($('#demo1').val(), 'Bananas', 'field');
-	equals(eventVal.value, 'Bananas', 'event');
-	equals(eventVal.index, 3);
-	ok(eventVal.isCustom == false, 'is custom');
+	equals(selectEvent.value, 'Bananas', 'event');
+	equals(selectEvent.index, 3);
+	ok(selectEvent.isCustom == false, 'is custom');
 	ok(dropdownList('demo1').is(':hidden'), 'menu hidden');
 });
 
@@ -120,3 +185,22 @@ test('select by arrow', function() {
 	ok(dropdownList('demo2').is(':hidden'), 'menu hidden');
 });
 
+test('select by typing', function() {
+	var keyEvent = null, selectEvent = null;
+	makeDemo2().bind('comboboxkey', function(e, ui) {
+		keyEvent = ui;
+	})
+	.bind('comboboxselect', function(e, ui) {
+		selectEvent = ui;
+	});
+
+	$('#demo2').focus().val('pe');
+	fireKey(101);	 // e
+	ok(dropdownList('demo2').is(':visible'), 'list is visible');
+	ok(dropdownOptions('demo2').eq(2).is('.selected'), 'Pears is selected');
+	equals(keyEvent.value, 'pe');
+	
+	fireKey(KEY_ENTER);
+	equals(selectEvent.value, 'pear');
+	equals(selectEvent.index, 2);
+});
