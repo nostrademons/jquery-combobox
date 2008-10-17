@@ -1,14 +1,13 @@
+/* vim: noexpandtab */
+
 /**
- * JQuery UI Combobox
+ * JQuery UI combobox.
  *
- * Copyright (c) 2008 Jonathan Tang
- * Dual licensed under the MIT (MIT-LICENSE.txt)
- * and GPL (GPL-LICENSE.txt) licenses.
- *
+ * @fileoverview
+ * @author Jonathan Tang
+ * @version 1.0
  * @dependency jquery.js
  * @dependency ui.core.js
- *
- * vim: noexpandtab
  */
 ;(function($) {
 	
