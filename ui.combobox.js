@@ -239,10 +239,10 @@ $.extend($.ui.combobox, {
 		change: function(e, ui) {},
 		select: function(e, ui) {},
 		key: function(e, ui) {},
-		arrowUrl: 'drop_down.png',
+		arrowURL: 'drop_down.png',
 		arrowHTML: function() {
 			return $('<img class = "ui-combobox-arrow" src = "' 
-				+ this.options.arrowUrl + '" width = "18" height = "22" />')
+				+ this.options.arrowURL + '" width = "18" height = "22" />')
 		},
 		listContainerTag: 'span',
 		listHTML: defaultListHTML
