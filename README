@@ -1,12 +1,12 @@
 This is a JQuery plugin for an editable combobox, built according to JQuery UI 1.5 conventions.  There are a couple existing combobox plugins, but they either weren't true comboboxes (dropdown only) or they would fail if you tried typing something non-ASCII into the text field.  This uses a different approach: the text field is real, but the drop-down is faked as a collection of spans.
 
-=== Dependencies ===
+### Dependencies ###
 
 * jquery.js (1.2.6 or later)
 * ui.core.js (1.5b4 or later)
 * for default styling, ui.combobox.css
 
-=== Usage ===
+### Usage ###
 
 $(selector).combobox() may be called on elements of any type.  If the element is a <select> tag, the combobox will attempt to populate itself from the options of the select.  Otherwise, the options arguments must have a 'data' field that contains a list of options.  By default, those options are displayed verbatim in the drop-down list; you can customize this by providing a function for the listHTML option.
 
@@ -22,7 +22,7 @@ The drop-down list is keyboard sensitive with the following keybindings:
 
 Additionally, options are auto-selected by typing within the input box.
 
-=== Options ===
+### Options ###
 
 * data: A list of options for the combobox
 * autoShow: If true (the default), then display the drop-down whenever the input field receives focus.  Otherwise, the user must explicitly click the drop-down icon to show the list.
