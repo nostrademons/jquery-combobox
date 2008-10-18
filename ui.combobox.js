@@ -1,12 +1,21 @@
-/* vim: noexpandtab */
+/* 
+ * vim: noexpandtab 
+ */
 
 /**
- * JQuery UI combobox.
+ * JQuery UI combobox plugin.  This may be called on any element; the element
+ * is replaced by a text field and drop-down div.  If the replaced element was
+ * a select, the combobox options can be picked up from the contents of the
+ * select.  Otherwise, the 'data' option must be provided to specify choice.
+ *
+ * Method names in documentation are relative to the JQuery UI infrastructure,
+ * i.e. the method call is always 'combobox', and then the method name is
+ * passed as the first (string) argument.
  *
  * @fileoverview
  * @author Jonathan Tang
  * @version 1.0
- * @dependency jquery.js
+ * @dependency jquery-1.2.6.js
  * @dependency ui.core.js
  */
 ;(function($) {
@@ -19,6 +28,54 @@ var KEY_UP = 38,
 
 $.widget('ui.combobox', {
 
+	/**
+	 * Main JQuery method.  Call $(selector).combobox(options) on any element,
+	 * or collection of elements, to turn them into a combobox.
+	 * 
+	 * All event handlers take 2 arguments: the original browser event, and an
+	 * object with the following fields:<ul> 
+	 * <li>value: the current value of the input field</li>
+	 * <li>index: the index within the option list of the presently-selected
+	 * value, or -1 if directly inputted.</li>
+	 * <li>isCustom: true if the user has typed in an option not on the list</li>
+	 * <li>inputElement: JQuery object containing the input field</li>
+	 * <li>listElement: JQuery object containing the drop-down list</li>
+	 * </ul>
+	 * @function combobox
+	 * @param {Object} options Options hash
+	 * @option {Array<String>} data List of options for the combobox
+	 * 
+	 * @option {Boolean} autoShow If true (the default), then display the
+	 * drop-down whenever the input field receives focus.  Otherwise, the 
+	 * user must explicitly click the drop-down icon to show the list.
+	 * 
+	 * @option {Boolean} matchMiddle If true (the default), then the combobox
+	 * tries to match the typed text with any portion of any of the 
+	 * options, instead of just the beginning.
+	 * 
+	 * @option {Function(e, ui)} key Event handler called whenever a key is
+	 * pressed in the input box.
+	 * 
+	 * @option {Function(e, ui)} change Event handler called whenever a new
+	 * option is selected on the drop-down list (eg. down/up arrows, typing in 
+	 * the input field).
+	 * 
+	 * @option {Function(e, ui)} select Event handler called when a selection
+	 * is finished (enter pressed or input field loses focus)
+	 * 
+	 * @option {String} arrowUrl URL of the image used for the drop-down arrow.
+	 * Used only by the default arrowHTML function; if you override 
+	 * that, you don't need to supply this.  Defaults to "drop_down.png"
+	 * 
+	 * @option {Function()} arrowHTML Function that should return the HTML of
+	 * the element used to display the drop-down.  Defaults to an image tag.
+	 *
+	 * @option {String} listContainerTag Tag to hold the drop-down list element.
+	 *
+	 * @option {Function(String, Int)} listHTML Function that takes the option
+	 * datum and index within the list and returns an HTML fragment for each
+	 * option.  Default is a span of class ui-combobox-item.
+	 */
 	init: function() {
 		var that = this;
 		var options = this.options;
@@ -84,12 +141,22 @@ $.widget('ui.combobox', {
 		this.listElem.remove();
 	},
 
+	/**
+	 * Remove all combobox functionality from this element, restoring the
+	 * original element.
+	 */
 	destroy: function() {
 		var newElem = this.element;
 		this.element = this.oldElem.insertBefore(this.arrowElem);
 		newElem.remove();	// Triggers cleanup
 	},
 
+	/**
+	 * Dynamically changes one of the combobox options.
+	 * 
+	 * @param {String} key Option name.
+	 * @param {Object} value New value.
+	 */
 	setData: function(key, value) {
 		this.options[key] = value;
 
@@ -123,6 +190,11 @@ $.widget('ui.combobox', {
 		return this.listElem.is(':visible');
 	},
 
+	/**
+	 * Programmatically shows the drop-down list.
+	 * 
+	 * @param {Event} e Original event triggering this.
+	 */
 	showList: function(e) {
 		if(this.options.disabled) {
 			return;
@@ -140,6 +212,9 @@ $.widget('ui.combobox', {
 		this.changeSelection(this.findSelection(), e);
 	},
 
+	/**
+	 * Programmatically hide the drop-down list.
+	 */
 	hideList: function() {
 		this.listElem.hide();
 		$(document).unbind('keyup', this.boundKeyHandler);
