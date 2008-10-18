@@ -1,8 +1,14 @@
-/* vim: noexpandtab : */
+/* 
+ * vim: noexpandtab
+ */
 img.ui-combobox-arrow {
 	position: relative;
 	vertical-align: text-bottom;
 	top: 2px;
+}
+
+* html img.ui-combobox-arrow {
+	top: -3px;
 }
 
 .ui-combobox-list {

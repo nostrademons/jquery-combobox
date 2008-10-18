@@ -201,8 +201,8 @@ $.widget('ui.combobox', {
 		}
 
 		var styles = this.element.offset();
-		// TODO: account for borders/margins
-		styles.top += this.element.height();
+		// TODO: account for borders/margins.  Hardcode as '2' for now
+		styles.top += this.element.height() + 5;
 		styles.width = this.element.width();
 		styles.position = 'absolute';
 
@@ -315,7 +315,7 @@ $.extend($.ui.combobox, {
 		key: function(e, ui) {},
 		arrowURL: 'drop_down.png',
 		arrowHTML: function() {
-			return $('<img class = "ui-combobox-arrow" src = "' 
+			return $('<img class = "ui-combobox-arrow" border = "0" src = "' 
 				+ this.options.arrowURL + '" width = "18" height = "22" />')
 		},
 		listContainerTag: 'span',
