@@ -121,10 +121,14 @@ $.widget('ui.combobox', {
 				}
 			})
 			.change(boundCallback(this, 'fireEvent', 'select'));
+
 		if(options.autoShow) {
 			this.element
 				.focus(boundCallback(this, 'showList'))
-				.blur(boundCallback(this, 'hideList'));
+				.blur(function(e) {
+					that.finishSelection(that.selectedIndex, e);
+					that.hideList();
+				});
 		}
 	},
 

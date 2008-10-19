@@ -160,6 +160,32 @@ test('select by click', function() {
 	ok(dropdownList('demo1').is(':hidden'), 'menu hidden');
 });
 
+test('select by focus', function() {
+	makeDemo2();
+	var selectEvent = null, changeEvent = null;
+	$('#demo2').bind('comboboxselect', function(e, ui) {
+		selectEvent = ui;
+	})
+	.bind('comboboxchange', function(e, ui) {
+		changeEvent = ui;	
+	});
+
+	$('#demo2').focus();
+	dropdownOptions('demo2').eq(2).mouseover();
+	equals(changeEvent.value, 'pear');
+	equals($('#demo2').val(), '', 'field');
+	ok(dropdownOptions('demo2').eq(2).is('.selected'), 'mouseover selects');
+
+	dropdownOptions('demo2').eq(2).click();
+	$('#demo2').blur();
+	equals($('#demo2').val(), 'pear', 'field');
+	equals(selectEvent.value, 'pear', 'event');
+	equals(selectEvent.index, 2);
+	ok(selectEvent.isCustom == false, 'is custom');
+	ok(dropdownList('demo2').is(':hidden'), 'menu hidden');
+});
+
+
 test('select by arrow', function() {
 	makeDemo2();
 	var selectEvent = null,
