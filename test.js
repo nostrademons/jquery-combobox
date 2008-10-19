@@ -176,6 +176,10 @@ test('select by arrow', function() {
 	ok(changeEvent, 'event fired');
 	equals(changeEvent.value, 'orange');
 
+	fireKey(KEY_UP);
+	equals(changeEvent.value, 'grape');
+
+	fireKey(KEY_DOWN);
 	fireKey(KEY_DOWN);
 	equals(changeEvent.value, 'apple');
 

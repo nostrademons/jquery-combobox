@@ -231,7 +231,12 @@ $.widget('ui.combobox', {
 				this.hideList(); 
 				break;
 			case KEY_UP:
-				this.changeSelection((this.selectedIndex - 1) % optionLength, e);
+				// JavaScript modulus apparently doesn't handle negatives
+				var newIndex = this.selectedIndex - 1;
+				if(newIndex < 0) {
+					newIndex = optionLength - 1;
+				}
+				this.changeSelection(newIndex, e);
 				break;
 			case KEY_DOWN:
 				this.changeSelection((this.selectedIndex + 1) % optionLength, e);
