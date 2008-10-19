@@ -11,6 +11,7 @@
 <body>
 	<h1>ComboBox demos</h1>
 	<h2>Simple combobox from array</h2>
+	<p>A custom listHTML has been provided here, so that the display doesn't have to match the value of the selection.</p>
 	<p>
 	<label for = "demo1">First demo: </label>
 	<input name = "field1" id = "demo1" class = "inputField" />
@@ -18,12 +19,21 @@
 	<p><a href = "" onclick = "alert($('#demo1').val()); return false;">Show val</a></p>
 	<script>
 		$('#demo1').combobox({
-			data: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Kiwis', 'Grapes'],
-			autoShow: false
+			data: ['Apple', 'Orange', 'Pear', 'Banana', 'Kiwi', 'Grape'],
+			autoShow: false,
+			listHTML: function(val, index) {
+				return $.ui.combobox.defaults.listHTML(
+					"Option " + (index + 1) + ": " + val + "s", index);
+			}
 		});
 	</script>
 
 	<h2>Simple combobox from select</h2>
+	<p>
+	The combobox picks up the "value" attribute from each option, and uses that
+	as the value of the selection.  This lets you use different values for the
+	display vs. the actual value.
+	</p>
 	<select id = "demo2">
 		<option value = "orange">Oranges</option>
 		<option value = "apple">Apples</option>
