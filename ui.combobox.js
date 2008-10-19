@@ -201,13 +201,14 @@ $.widget('ui.combobox', {
 		}
 
 		var styles = this.element.offset();
-		// TODO: account for borders/margins.  Hardcode as '2' for now
+		// TODO: account for borders/margins.  Hardcode as '5' for now
 		styles.top += this.element.height() + 5;
 		styles.width = this.element.width();
 		styles.position = 'absolute';
 
 		this.boundKeyHandler = boundCallback(this, 'keyHandler');
 		$(document).keyup(this.boundKeyHandler);
+		$('.ui-combobox-list').hide();
 		this.listElem.css(styles).show();
 		this.changeSelection(this.findSelection(), e);
 	},

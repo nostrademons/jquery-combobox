@@ -208,3 +208,15 @@ test('select by typing', function() {
 	equals(selectEvent.value, 'pear');
 	equals(selectEvent.index, 2);
 });
+
+test('both open', function() {
+	makeDemo1();
+	makeDemo2();
+
+	clickDropdown('demo1');
+	ok(dropdownList('demo1').is(':visible'), 'list 1 is visible');
+
+	clickDropdown('demo2');
+	ok(dropdownList('demo2').is(':visible'), 'list 2 is visible');
+	ok(dropdownList('demo1').is(':hidden'), 'list 1 is not visible');
+});
