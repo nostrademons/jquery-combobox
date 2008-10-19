@@ -4,7 +4,7 @@ This is a JQuery plugin for an editable combobox, built according to JQuery UI 1
 
 * jquery.js (1.2.6 or later)
 * ui.core.js (1.5b4 or later)
-* for default styling, ui.combobox.css
+* for default styling, ui.combobox.css and drop_down.png
 
 ### Usage ###
 
