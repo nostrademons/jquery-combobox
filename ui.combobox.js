@@ -14,7 +14,7 @@
  *
  * @fileoverview
  * @author Jonathan Tang
- * @version 1.0.1
+ * @version 1.0.2
  * @dependency jquery-1.2.6.js
  * @dependency ui.core.js
  */
