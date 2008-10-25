@@ -76,6 +76,9 @@ test('dropdown', function() {
 	for(var i = 0, len = expected.length; i < len; ++i) {
 		equals(found.eq(i).text(), expected[i]);
 	}
+
+	$(document).click();
+	ok(dropdownList('demo1').is(':hidden'), 'list is hidden');
 });
 
 test('replace data', function() {

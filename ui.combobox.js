@@ -95,13 +95,20 @@ $.widget('ui.combobox', {
 			fillDataFromSelect(options, this.element);
 		}
 			
+		function closeListOnDocumentClick() {
+			that.hideList();
+			$(document).unbind('click', closeListOnDocumentClick);
+		};
+
 		this.arrowElem = $(this.options.arrowHTML.call(this))
 			.click(function(e) {
 				if(that.isListVisible()) {
 					that.hideList();
 				} else {
 					that.showList();
+					$(document).click(closeListOnDocumentClick);
 				}
+				return false;
 			}); 
 
 		this.oldElem = this.element
@@ -380,6 +387,7 @@ function boundCallback(that, methodName) {
 		that[methodName].apply(that, extraArgs.concat([].slice.call(arguments)));
 	};
 };
+
 
 function fillDataFromSelect(options, element) {
 	var optionMap = {}, computedData = [];
