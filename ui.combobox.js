@@ -14,7 +14,7 @@
  *
  * @fileoverview
  * @author Jonathan Tang
- * @version 1.0.2
+ * @version 1.0.3
  * @dependency jquery-1.2.6.js
  * @dependency ui.core.js
  */
@@ -211,7 +211,7 @@ $.widget('ui.combobox', {
 			return;
 		}
 
-		var styles = this.element.offset();
+		var styles = this.element.position();
 		// TODO: account for borders/margins.  Hardcode as '5' for now
 		styles.top += this.element.height() + 5;
 		styles.width = this.element.width();
@@ -387,7 +387,6 @@ function boundCallback(that, methodName) {
 		that[methodName].apply(that, extraArgs.concat([].slice.call(arguments)));
 	};
 };
-
 
 function fillDataFromSelect(options, element) {
 	var optionMap = {}, computedData = [];
