@@ -81,15 +81,19 @@ $.widget('ui.combobox', {
 		var options = this.options;
 		var inputElem = $('<input />');
 
-		function maybeCopyAttr(name) {
+		function maybeCopyAttr(name, elem) {
 			var val = that.element.attr(name);
 			if(val) {
-				inputElem.attr(name, val);
+				if(name == 'class') {
+					elem.addClass(val);
+				} else {
+					elem.attr(name, val);
+				}
 			}
 		};
-		maybeCopyAttr('id');
-		maybeCopyAttr('class');
-		maybeCopyAttr('name');
+		maybeCopyAttr('id', inputElem);
+		maybeCopyAttr('class', inputElem);
+		maybeCopyAttr('name', inputElem);
 
 		if(this.element[0].tagName.toLowerCase() == 'select') {
 			fillDataFromSelect(options, this.element);
@@ -110,6 +114,7 @@ $.widget('ui.combobox', {
 				}
 				return false;
 			}); 
+		maybeCopyAttr('class', this.arrowElem);
 
 		this.oldElem = this.element
 			.unbind('getData.combobox')
@@ -120,6 +125,7 @@ $.widget('ui.combobox', {
 			.remove();
 
 		this.listElem = this.buildList().insertAfter(this.arrowElem).hide();
+		maybeCopyAttr('class', this.listElem);
 
 		this.element = inputElem
 			.keyup(function(e) {
