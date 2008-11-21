@@ -14,7 +14,7 @@
  *
  * @fileoverview
  * @author Jonathan Tang
- * @version 1.0.3
+ * @version 1.0.4
  * @dependency jquery-1.2.6.js
  * @dependency ui.core.js
  */
@@ -79,26 +79,12 @@ $.widget('ui.combobox', {
 	init: function() {
 		var that = this;
 		var options = this.options;
-		var inputElem = $('<input />');
-
-		function maybeCopyAttr(name, elem) {
-			var val = that.element.attr(name);
-			if(val) {
-				if(name == 'class') {
-					elem.addClass(val);
-				} else {
-					elem.attr(name, val);
-				}
-			}
-		};
-		maybeCopyAttr('id', inputElem);
-		maybeCopyAttr('class', inputElem);
-		maybeCopyAttr('name', inputElem);
+		var inputElem = $('<input type = "text" />');
 
 		if(this.element[0].tagName.toLowerCase() == 'select') {
 			fillDataFromSelect(options, this.element);
 		}
-			
+
 		function closeListOnDocumentClick() {
 			that.hideList();
 			$(document).unbind('click', closeListOnDocumentClick);
@@ -114,7 +100,32 @@ $.widget('ui.combobox', {
 				}
 				return false;
 			}); 
-		maybeCopyAttr('class', this.arrowElem);
+
+		function maybeCopyAttr(name, elem) {
+			var val = that.element.attr(name);
+			if(val) {
+				if(name == 'class') {
+					elem.addClass(val);
+				} else {
+					elem.attr(name, val);
+				}
+			}
+		};
+
+		maybeCopyAttr('class', inputElem);
+		maybeCopyAttr('name', inputElem);
+		maybeCopyAttr('title', inputElem);
+		maybeCopyAttr('dir', inputElem);
+		maybeCopyAttr('lang', inputElem);
+		maybeCopyAttr('xml:lang', inputElem);
+
+		maybeCopyAttr('size', inputElem);
+		maybeCopyAttr('value', inputElem);
+
+		// Maxlength comes back -1 if unset, which causes problems when set
+		if(this.element.attr('maxlength') != -1) {
+			inputElem.attr('maxlength', this.element.attr('maxlength'));
+		}
 
 		this.oldElem = this.element
 			.unbind('getData.combobox')
@@ -123,9 +134,13 @@ $.widget('ui.combobox', {
 			.after(this.arrowElem)
 			.after(inputElem)
 			.remove();
-
 		this.listElem = this.buildList().insertAfter(this.arrowElem).hide();
+
+		// ID copied afterwards so we never have two elements with the same
+		// ID in the DOM.
+		maybeCopyAttr('id', inputElem);
 		maybeCopyAttr('class', this.listElem);
+		maybeCopyAttr('class', this.arrowElem);
 
 		this.element = inputElem
 			.keyup(function(e) {
@@ -143,6 +158,7 @@ $.widget('ui.combobox', {
 					that.hideList();
 				});
 		}
+
 	},
 
 	cleanup: function() {

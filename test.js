@@ -44,8 +44,16 @@ function dropdownOptions(comboID) {
 test('preserves attributes', function() {
 	makeDemo1();
 	equals($('#demo1').attr('id'), 'demo1');
+	equals($('#demo1').attr('title'), 'Test');
 	equals($('#demo1').attr('name'), 'field1');
 	equals($('#demo1').attr('class'), 'inputField');
+
+	equals($('#demo1').attr('size'), '40');
+	equals($('#demo1').attr('maxlength'), '30');
+	equals($('#demo1').attr('value'), 'Apples');
+
+	clickDropdown('demo1');
+	ok($('.ui-combobox-list').is('.inputField'), 'list has class');
 });
 
 test('chainability', function() {
@@ -58,6 +66,7 @@ test('chainability', function() {
 test('fill from select', function() {
 	makeDemo2();
 	var found = $('#demo2').data('combobox').options.data;
+	equals($('#demo2').val(), 'orange');
 	equals(6, found.length);
 	equals(found[0], 'orange');
 	equals(found[1], 'apple');
@@ -176,7 +185,7 @@ test('select by focus', function() {
 	$('#demo2').focus();
 	dropdownOptions('demo2').eq(2).mouseover();
 	equals(changeEvent.value, 'pear');
-	equals($('#demo2').val(), '', 'field');
+	equals($('#demo2').val(), 'orange', 'field');
 	ok(dropdownOptions('demo2').eq(2).is('.selected'), 'mouseover selects');
 
 	dropdownOptions('demo2').eq(2).click();
