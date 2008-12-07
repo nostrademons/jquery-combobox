@@ -345,7 +345,7 @@ $.widget('ui.combobox', {
 
 $.extend($.ui.combobox, {
 	getter: 'getData',
-	version: '1.0.5',
+	version: '1.0.6',
 	defaults: {
 		data: [],
 		autoShow: true,
@@ -429,7 +429,7 @@ function fillDataFromSelect(options, element) {
 
 	if(options.listHTML == defaultListHTML) {
 		options.listHTML = function(data, i) {
-			return defaultListHTML(optionMap[data]);
+			return defaultListHTML(optionMap[data] || data);
 		};
 	}
 };
