@@ -72,9 +72,16 @@
 		<a href = "" onclick = "$('#demo4').combobox('enable'); return false">Enable</a> |
 		<a href = "" onclick = "$('#demo4').combobox('disable'); return false">Disable</a> |
 		<a href = "" onclick = "$('#demo4').combobox('destroy'); return false">Destroy</a> |
-		<a href = "" onclick = "$('#demo4').remove(); return false">Remove</a>
+		<a href = "" onclick = "$('#demo4').remove(); return false">Remove</a> |
+		<a href = "" onclick = "addItem(); return false">Add Item</a>
 	</p>
 	<script>
+		function addItem() {
+			var existing = $('#demo4').combobox('getData', 'data');
+			existing.push('Option ' + existing.length);
+			$('#demo4').combobox('setData', 'data', existing);
+		};
+
 		$('#demo4').combobox({
 			data: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Kiwis', 'Grapes']
 		});
