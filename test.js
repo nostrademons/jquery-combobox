@@ -101,6 +101,22 @@ test('replace data', function() {
 	equals(firstOption.text(), 'Foo');
 });
 
+test('add to data', function() {
+	makeDemo1();
+	clickDropdown('demo1');
+	var items = $('#demo1').combobox('getData', 'data');
+	equals(items.length, 6);
+	equals(items[0], 'Apples');
+
+	items.push('Option 7');
+	equals(dropdownOptions('demo1').length, 6);
+
+	$('#demo1').combobox('setData', 'data', items);
+	equals($('#demo1').combobox('getData', 'data').length, 7);
+	equals(dropdownOptions('demo1').length, 7);
+	equals(dropdownOptions('demo1').eq(6).text(), 'Option 7');
+});
+
 test('disable', function() {
 	function isHidden(msg) {
 		ok(dropdownList('demo2').is(':hidden'), msg);

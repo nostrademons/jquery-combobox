@@ -14,7 +14,6 @@
  *
  * @fileoverview
  * @author Jonathan Tang
- * @version 1.0.4
  * @dependency jquery-1.2.6.js
  * @dependency ui.core.js
  */
@@ -345,6 +344,8 @@ $.widget('ui.combobox', {
 });
 
 $.extend($.ui.combobox, {
+	getter: 'getData',
+	version: '1.0.5',
 	defaults: {
 		data: [],
 		autoShow: true,
