@@ -366,6 +366,7 @@ $.extend($.ui.combobox, {
 // is only the UI instance, it leaves the JQuery collection itself pointing
 // at stale, removed-from-DOM instances.  This hack invokes the UI-factory 
 // plugin method first, then maps each instance in the JQuery collection to 
+// the new element.
 var oldPlugin = $.fn.combobox;
 $.fn.combobox = function() {
 	var results = oldPlugin.apply(this, arguments);
