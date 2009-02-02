@@ -160,6 +160,11 @@ $.widget('ui.combobox', {
 
 	},
 
+	_init: function() {
+		// JQuery UI 1.6rc6 compatibility
+		this.init.apply(this, arguments);
+	},
+
 	cleanup: function() {
 		// Cleanup and destroy are split into two separate handlers because
 		// one of them (cleanup, in this case) needs to be bound to the
