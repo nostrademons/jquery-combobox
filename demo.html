@@ -87,6 +87,28 @@
 		});
 	</script>
 
+	<h2>Images from data list</h2>
+	<p>This demonstrates how to pull values out of an external dictionary, mapping tech companies to their websites.  It also shows how to include images in the list.</p>
+	<p>
+	<input name = "field5" id = "demo5" class = "inputField" value = "Yahoo" />
+	</p>
+	<script>
+		var favicons = {
+			Google: 'http://www.google.com/favicon.ico',
+			Yahoo: 'http://www.yahoo.com/favicon.ico',
+			Microsoft: 'http://www.microsoft.com/favicon.ico',
+			Apple: 'http://www.apple.com/favicon.ico',
+			Sun: 'http://www.sun.com/favicon.ico'
+		};
+		$('#demo5').combobox({
+			data: ['Google', 'Yahoo', 'Microsoft', 'Apple', 'Sun'],
+			listHTML: function(val, index) {
+				return '<span class = "ui-combobox-item"><img src = "' + 
+					favicons[val] + '" height = "16" width = "16" />' +
+					val + '</span>';
+			}
+		});
+	</script>
 
 </body>
 </html>
