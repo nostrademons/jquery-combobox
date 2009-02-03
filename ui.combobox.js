@@ -16,6 +16,7 @@
  * @author Jonathan Tang
  * @dependency jquery-1.2.6.js
  * @dependency ui.core.js
+ * @version 1.0.1
  */
 ;(function($) {
 	
