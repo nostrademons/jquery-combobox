@@ -44,3 +44,7 @@ All event handlers take 2 arguments: the original browser event, and an object w
 * listElement: JQuery object containing the drop-down list
 
 The event handlers are also available as custom JQuery events, following JQuery UI conventions (i.e. select = 'comboboxselect', key = 'comboboxkey', etc.)
+
+## License
+
+Dual-licensed under GPL and MIT licenses, same as regular JQuery.

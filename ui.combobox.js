@@ -1,8 +1,8 @@
-/* 
- * vim: noexpandtab 
- */
-
-/**
+/*
+ * Copyright (c) 2008 Jonathan Tang
+ * Dual licensed under the MIT (MIT-LICENSE.txt)
+ * and GPL (GPL-LICENSE.txt) licenses.
+ *
  * JQuery UI combobox plugin.  This may be called on any element; the element
  * is replaced by a text field and drop-down div.  If the replaced element was
  * a select, the combobox options can be picked up from the contents of the
@@ -17,6 +17,8 @@
  * @dependency jquery-1.2.6.js
  * @dependency ui.core.js
  * @version 1.0.1
+ *
+ * vim: noexpandtab
  */
 ;(function($) {
 	

@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 2008 Jonathan Tang
+ * Dual licensed under the MIT (MIT-LICENSE.txt)
+ * and GPL (GPL-LICENSE.txt) licenses.
+ *
  * Qunit test suite for UI Combobox
  * vim: noexpandtab
  */
